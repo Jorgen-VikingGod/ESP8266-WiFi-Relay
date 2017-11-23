@@ -78,8 +78,6 @@ function setMode(id, value) {
   var datatosend;
   if (id.includes('relay')) {
     datatosend = {cmd: 'relay', id: id, value: value};
-  } else if (id.includes('servo')) {
-    datatosend = {cmd: 'servo', id: id, value: value};
   }
   $.jpost(urlBase + 'toggle', datatosend).then(function(data) {
     var value = data[id];

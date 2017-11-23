@@ -37,24 +37,15 @@ $('#btnSaveConf').click(function() {
     relay5: { name: $('#relay5Name').val(),
               type: $('#relay5Type option:selected').val(),
               pin: $('#relay5Pin option:selected').val() },
-    servo1:  { name: $('#servo1Name').val(),
-              open: $('#servo1Open option:selected').val(),
-              close: $('#servo1Close option:selected').val(),
-              pulsemin: $('#servo1PulseMin').val(),
-              pulsemax: $('#servo1PulseMax').val(),
-              pin: $('#servo1Pin option:selected').val() },
-    servo2:  { name: $('#servo2Name').val(),
-              open: $('#servo2Open option:selected').val(),
-              close: $('#servo2Close option:selected').val(),
-              pulsemin: $('#servo2PulseMin').val(),
-              pulsemax: $('#servo2PulseMax').val(),
-              pin: $('#servo2Pin option:selected').val() },
-    servo3:  { name: $('#servo3Name').val(),
-              open: $('#servo3Open option:selected').val(),
-              close: $('#servo3Close option:selected').val(),
-              pulsemin: $('#servo3PulseMin').val(),
-              pulsemax: $('#servo3PulseMax').val(),
-              pin: $('#servo3Pin option:selected').val() },
+    relay6: { name: $('#relay6Name').val(),
+              type: $('#relay6Type option:selected').val(),
+              pin: $('#relay6Pin option:selected').val() },
+    relay7: { name: $('#relay7Name').val(),
+              type: $('#relay7Type option:selected').val(),
+              pin: $('#relay7Pin option:selected').val() },
+    relay8: { name: $('#relay8Name').val(),
+              type: $('#relay8Type option:selected').val(),
+              pin: $('#relay8Pin option:selected').val() },
   };
   $.jpost(urlBase + 'settings/configfile', datatosend);
   updateSettingsDialog();
@@ -151,27 +142,18 @@ function getAll() {
     $('#relay5Name').val(relay5Name);
     $('#relay5Type').val(data.relay5.type).change();
     $('#relay5Pin').val(data.relay5.pin).change();
-    var servo1Name = (data.servo1.name ? data.servo1.name : 'Servo 1');
-    $('#servo1Name').val(servo1Name);
-    $('#servo1Open').val(data.servo1.open).change();
-    $('#servo1Close').val(data.servo1.close).change();
-    $('#servo1PulseMin').val(data.servo1.pulsemin);
-    $('#servo1PulseMax').val(data.servo1.pulsemax);
-    $('#servo1Pin').val(data.servo1.pin).change();
-    var servo2Name = (data.servo2.name ? data.servo2.name : 'Servo 2');
-    $('#servo2Name').val(servo2Name);
-    $('#servo2Open').val(data.servo2.open).change();
-    $('#servo2Close').val(data.servo2.close).change();
-    $('#servo2PulseMin').val(data.servo2.pulsemin);
-    $('#servo2PulseMax').val(data.servo2.pulsemax);
-    $('#servo2Pin').val(data.servo2.pin).change();
-    var servo3Name = (data.servo3.name ? data.servo3.name : 'Servo 3');
-    $('#servo3Name').val(servo3Name);
-    $('#servo3Open').val(data.servo3.open).change();
-    $('#servo3Close').val(data.servo3.close).change();
-    $('#servo3PulseMin').val(data.servo3.pulsemin);
-    $('#servo3PulseMax').val(data.servo3.pulsemax);
-    $('#servo3Pin').val(data.servo3.pin).change();
+    var relay6Name = (data.relay6.name ? data.relay6.name : 'Relay 6');
+    $('#relay6Name').val(relay6Name);
+    $('#relay6Type').val(data.relay6.type).change();
+    $('#relay6Pin').val(data.relay6.pin).change();
+    var relay7Name = (data.relay7.name ? data.relay7.name : 'Relay 7');
+    $('#relay7Name').val(relay7Name);
+    $('#relay7Type').val(data.relay7.type).change();
+    $('#relay7Pin').val(data.relay7.pin).change();
+    var relay8Name = (data.relay8.name ? data.relay8.name : 'Relay 8');
+    $('#relay8Name').val(relay8Name);
+    $('#relay8Type').val(data.relay8.type).change();
+    $('#relay8Pin').val(data.relay8.pin).change();
     var dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
     $('#downloadSet').attr({download: data.hostname + '-settings.json',href: dataStr});
     $('#chip').text(data.chipid);
