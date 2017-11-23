@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Juergen Skrotzky, JorgenVikingGod@gmail.com">
+  <title>WiFi Relay</title>
+  <link rel="stylesheet" href="css/style.min.css">
+  <link rel="icon" href="images/atom196.png">
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/index.htm">WiFi Relay</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="btn-primary active"><a href="/index.htm">Dashboard</a></li>
+          <li><a href="/settings.htm">Settings</a></li>
+          <li>
+            <a href="#" type="button" data-toggle="tooltip" title="Refresh relay states">
+              <span class="glyphicon glyphicon-refresh" id="btnRefresh"></span>
+            </a>
+          </li>
+        </ul><!-- nav -->
+      </div><!-- nabar collapse -->
+    </div><!-- container -->
+  </nav><!-- navbar -->
+  <div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="loadModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">fetching data...</h4>
+          </div>
+          <div class="modal-body">
+            <img src="images/load.gif">
+            <h5>Please wait while fetching data... <span id="loadPages"></span></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Relays</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Change relay states by toggle buttons on or off.</span></p>
+            <form class="form-horizontal">
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="relay1Name">Relay 1</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="relay1" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Relay 1">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="relay1On" state="1">On</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="relay1Off" state="0">Off</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="relay2Name">Relay 2</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="relay2" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Relay 2">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="relay2On" state="1">On</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="relay2Off" state="0">Off</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="relay3Name">Relay 3</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="relay3" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Relay 3">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="relay3On" state="1">On</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="relay3Off" state="0">Off</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="relay4Name">Relay 4</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="relay4" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Relay 4">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="relay4On" state="1">On</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="relay4Off" state="0">Off</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="relay5Name">Relay 5</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="relay5" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Relay 5">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="relay5On" state="1">On</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="relay5Off" state="0">Off</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+            </form>
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-6 -->
+      <div class="col-sm-6">
+        <div class="panel panel-primary">
+          <div class="panel-heading">Bahtinov Masks</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Change servo states open or close by toggle buttons.</span></p>
+            <form class="form-horizontal">
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="servo1Name">Servo 1</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="servo1" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Servo 1">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="servo1On" state="1">Open</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="servo1Off" state="0">Close</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="servo2Name">Servo 2</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="servo2" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Servo 2">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="servo2On" state="1">Open</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="servo2Off" state="0">Close</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+              <div class="row form-group">
+                <div class="col-xs-3">
+                  <label class="control-label" id="servo3Name">Servo 3</label>
+                </div><!-- col-3 -->
+                <div class="col-xs-9">
+                  <div id="servo3" class="btn-group btn-group-justified btn-toggle" role="group" aria-label="Servo 3">
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-default" id="servo3On" state="1">Open</button>
+                    </div>
+                    <div class="btn-group" role="group">
+                      <button type="button" class="btn btn-primary active" id="servo3Off" state="0">Close</button>
+                    </div>
+                  </div>
+                </div><!-- col-9 -->
+              </div><!-- row -->
+            </form>
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-6 -->
+    </div><!-- row -->
+  </div><!-- container -->
+  <script src="js/scripts.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>

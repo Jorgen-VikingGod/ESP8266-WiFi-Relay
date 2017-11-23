@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Juergen Skrotzky, JorgenVikingGod@gmail.com">
+  <title>WiFi Relay</title>
+  <link rel="stylesheet" href="css/style.min.css">
+  <link rel="icon" href="images/atom196.png">
+</head>
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/index.htm">WiFi Relay</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/index.htm">Dashboard</a></li>
+          <li class="btn-primary active"><a href="/settings.htm">Settings</a></li>
+          <li>
+            <a href="#" type="button" data-toggle="tooltip" title="Refresh relay states">
+              <span class="glyphicon glyphicon-refresh" id="btnRefresh"></span>
+            </a>
+          </li>
+        </ul><!-- nav -->
+      </div><!-- nabar collapse -->
+    </div><!-- container -->
+  </nav><!-- navbar -->
+  <div class="container">
+    <!-- Modal -->
+    <div class="modal fade" id="updateModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Update Settings</h4>
+          </div>
+          <div class="modal-body">
+            <p>Device should reboot with new settings in 10 seconds!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="loadModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">fetching data...</h4>
+          </div>
+          <div class="modal-body">
+            <img src="images/load.gif">
+            <h5>Please wait while fetching data... <span id="loadPages"></span></h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button data-toggle="collapse" data-target="#status" id="btnRefStat" class="btn btn-link">Show Device Status</button>
+      <button data-toggle="collapse" data-target="#status" id="btnRefStat2" class="btn btn-link" style="display:none;">Hide Device Status</button>
+    </div>
+    <div id="status" class="row collapse">
+      <div class="col-sm-6">
+        <div class="panel panel-default table-responsive">
+          <table class="table table-hover table-striped">
+            <caption>Device</caption>
+            <tr>
+              <th>Chip ID</th>
+              <td id="chip"></td>
+            </tr>
+            <tr>
+              <th>CPU Clock</th>
+              <td id="cpu"></td>
+            </tr>
+            <tr>
+              <th>Free Heap</th>
+              <td>
+                <div class="progress" style="margin-bottom: 0 !important;">
+                  <div id="heap" class="progress-bar progress-bar-primary" role="progressbar">Progress</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Free Flash</th>
+              <td>
+                <div class="progress" style="margin-bottom: 0 !important;">
+                  <div id="flash" class="progress-bar progress-bar-primary" role="progressbar">Progress</div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>Free SPIFFS</th>
+              <td>
+                <div class="progress" style="margin-bottom: 0 !important;">
+        					<div id="spiffs" class="progress-bar progress-bar-primary" role="progressbar">Progress</div>
+        				</div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div><!-- col-6 -->
+      <div class="col-sm-6">
+        <div class="panel panel-default table-responsive">
+          <table class="table table-hover table-striped">
+            <caption>Network</caption>
+            <tr>
+              <th>SSID</th>
+              <td id="ssidstat"></td>
+            </tr>
+            <tr>
+              <th>IP</th>
+              <td id="ip"></td>
+            </tr>
+            <tr>
+              <th>Gateway</th>
+              <td id="gate"></td>
+            </tr>
+            <tr>
+              <th>Mask</th>
+              <td id="mask"></td>
+            </tr>
+            <tr>
+              <th>DNS</th>
+              <td id="dns"></td>
+            </tr>
+            <tr>
+              <th>MAC</th>
+              <td id="mac"></td>
+            </tr>
+          </table>
+        </div>
+      </div><!-- col-6 -->
+    </div><!-- row -->
+    <br />
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading">General Settings</div>
+          <div class="panel-body">
+            <div class="row form-group">
+              <div class="col-xs-3">
+                <label data-toggle="tooltip" title="Log On password for the Administrator">Admin Password</label>
+              </div>
+              <div class="col-xs-9">
+                <input class="form-control" placeholder="Admin Password" id="adminPwd" type="password" data-toggle="password">
+              </div>
+              <br />
+            </div><!-- row -->
+            <div class="row form-group">
+              <div class="col-xs-3">
+                <label data-toggle="tooltip" title="Hostname for your ESP, When Bonjour is installed on your computer you can access your ESP via http://hostname.local">Hostname</label>
+              </div>
+              <div class="col-xs-9">
+                <input class="form-control" placeholder="Hostname" value="wifi-relay" id="hostname" type="text">
+              </div>
+              <br />
+            </div><!-- row -->
+            <div class="row form-group">
+              <div class="col-xs-3">
+                <label data-toggle="tooltip" title="Name/SSID for your favorite WiFi network">SSID</label>
+              </div>
+              <div class="col-xs-9">
+                <input class="form-control" placeholder="Favorite Network SSID" id="ssid" type="text">
+              </div>
+              <br />
+            </div><!-- row -->
+            <div class="row form-group">
+              <div class="col-xs-3">
+                <label data-toggle="tooltip" title="Password for your favorite WiFi network">WiFi Password</label>
+              </div>
+              <div class="col-xs-9">
+                <input class="form-control" placeholder="" id="wifipwd" type="password" data-toggle="password">
+              </div>
+              <br />
+            </div><!-- row -->
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-12 -->
+    </div><!-- row -->
+    <br />
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-warning">
+          <div class="panel-heading">Hardware Settings</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Pin configuration for each relay.</span></p>
+            <div class="row">
+              <div class="col-sm-6">
+                <h6>Relay 1</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 1">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 1" id="relay1Name" type="text" value="Relay 1">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay1Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay1Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option selected="selected" value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+              <div class="col-sm-6">
+                <h6>Relay 2</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 2">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 2" id="relay2Name" type="text" value="Relay 2">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay2Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay2Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option selected="selected" value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+            </div><!-- row -->
+            <div class="row">
+              <div class="col-sm-6">
+                <h6>Relay 3</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 3">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 3" id="relay3Name" type="text" value="Relay 3">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay3Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay3Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option selected="selected" value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+              <div class="col-sm-6">
+                <h6>Relay 4</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 4">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 4" id="relay4Name" type="text" value="Relay 4">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay4Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay4Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option selected="selected" value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+            </div><!-- row -->
+            <div class="row">
+              <div class="col-sm-6">
+                <h6>Relay 5</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 5">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 5" id="relay5Name" type="text" value="Relay 5">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay5Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay5Pin">
+                      <option selected="selected" value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+              <div class="col-sm-6">
+                <h6>Relay 6</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 6">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 6" id="relay6Name" type="text" value="Relay 6">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay6Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay6Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option selected="selected" value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+            </div><!-- row -->
+            <div class="row">
+              <div class="col-sm-6">
+                <h6>Relay 7</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 7">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 7" id="relay7Name" type="text" value="Relay 7">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay7Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay7Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option selected="selected" value="4">GPIO-4 (D2)</option>
+                      <option value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+              <div class="col-sm-6">
+                <h6>Relay 8</h6>
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Visual name of relay 8">Display Name</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <input class="form-control" placeholder="Display name of relay 6" id="relay8Name" type="text" value="Relay 8">
+                  </div>
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Depending on your electrical setup, you can choose the relay type">Relay Type</label>
+                  </div>
+      						<div class="col-xs-9">
+        						<select class="form-control" id="relay8Type">
+        							<option selected="selected" value="1">Active High</option>
+        							<option value="0">Active Low</option>
+        						</select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+                <div class="row form-group">
+                  <div class="col-xs-3">
+                    <label data-toggle="tooltip" title="Choose which ESP port is connected to your relay">Relay Pin</label>
+                  </div>
+                  <div class="col-xs-9">
+                    <select class="form-control" id="relay8Pin">
+                      <option value="0">GPIO-0 (D3)</option>
+                      <option value="2">GPIO-2 (D4)</option>
+                      <option value="4">GPIO-4 (D2)</option>
+                      <option selected="selected" value="5">GPIO-5 (D1)</option>
+                      <option value="12">GPIO-12 (D6)</option>
+                      <option value="13">GPIO-13 (D7)</option>
+                      <option value="14">GPIO-14 (D5)</option>
+                      <option value="15">GPIO-15 (D8)</option>
+                      <option value="16">GPIO-16 (D0)</option>
+                    </select>
+                  </div><!-- col-9 -->
+                </div><!-- row -->
+              </div><!-- col-6 -->
+            </div><!-- row -->
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-12 -->
+    </div><!-- row -->
+    <div class="row">
+      <div class="col-xs-12">
+        <button id="btnSaveConf" class="btn btn-primary pull-right">Save & Reboot</button>
+      </div><!-- col-12 -->
+    </div><!-- row -->
+    <hr />
+    <div class="row">
+      <div class="col-sm-6 col-md-4">
+        <div class="panel panel-danger">
+          <div class="panel-heading">Backup</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Please make sure to have a backup before updating the firmware.</span></p>
+            <div>
+              <button id="btnBackupSet" class="btn btn-link">Backup Settings</button>
+              <a id="downloadSet" style="display:none"></a>
+            </div>
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-4 -->
+      <div class="col-sm-6 col-md-4">
+        <div class="panel panel-success">
+          <div class="panel-heading">Restore</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Click on links and choose your backup file to restore.</span></p>
+            <label for="restoreSet" class="btn btn-link">Restore Settings</label>
+            <input id="restoreSet" type="file" accept="text/json" style="display:none;">
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-4 -->
+      <div class="col-sm-12 col-md-4">
+        <div class="panel panel-info">
+          <div class="panel-heading">Update Firmware</div>
+          <div class="panel-body">
+            <p><span class="text-muted">Download <a href="https://github.com/Jorgen-VikingGod/ESP8266-WiFi-Relay-Async/raw/master/compiledbin/latest.bin">latest version</a> from GitHub.</span></p>
+            <form class="form-inline" id="formUpdate" method="POST" action="settings/update" enctype="multipart/form-data">
+              <div class="form-group">
+                <input type="file" name="update">
+              </div>
+              <button type="submit" class="btn btn-primary pull-right">Upload</button>
+            </form>
+          </div><!-- panel-body -->
+        </div><!-- panel -->
+      </div><!-- col-6 -->
+    </div><!-- row -->
+  </div><!-- container -->
+  <script src="js/scripts.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

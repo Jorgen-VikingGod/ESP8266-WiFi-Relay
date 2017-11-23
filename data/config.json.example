@@ -1,0 +1,47 @@
+{
+  "command": "configfile",
+  "ssid": "",
+  "wifipwd": "",
+  "hostname": "wifi-relay",
+  "adminpwd": "admin",
+  "relay1": {
+    "name": "Relay 1",
+    "type": "1",
+    "pin": "14"
+  },
+  "relay2": {
+    "name": "Relay 2",
+    "type": "1",
+    "pin": "12"
+  },
+  "relay3": {
+    "name": "Relay 3",
+    "type": "1",
+    "pin": "13"
+  },
+  "relay4": {
+    "name": "Relay 4",
+    "type": "1",
+    "pin": "15"
+  },
+  "relay5": {
+    "name": "Relay 5",
+    "type": "1",
+    "pin": "0"
+  },
+  "relay6": {
+    "name": "Relay 6",
+    "type": "1",
+    "pin": "2"
+  },
+  "relay7": {
+    "name": "Relay 7",
+    "type": "1",
+    "pin": "4"
+  },
+  "relay8": {
+    "name": "Relay 8",
+    "type": "1",
+    "pin": "5"
+  }
+}

@@ -1,0 +1,15 @@
+# OS generated files #
+######################
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+*/overlays
+*~
+
+# Files that might appear on external disk
+.Spotlight-V100
+.Trashes
+
+# config file
+config.json
