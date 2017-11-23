@@ -1,5 +1,5 @@
 # ESP8266-WiFi-Relay
-simple sketch for ESP8266 of using ESP8266WebServer to switch relays on GPIO pins, control servos to open and close masks, serves a simple website with toggle buttons for each relay.
+simple sketch for ESP8266 of using ESP8266WebServer to switch relays on GPIO pins and serves a simple website with toggle buttons for each relay.
 
 ## Features
 * Data is encoded as JSON object
